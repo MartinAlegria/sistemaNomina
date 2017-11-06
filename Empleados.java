@@ -95,7 +95,7 @@ public class Empleados {
         String temp = "";
         temp += "\t" + getNombre() + " " + getApellido() + "\n";
         temp += "\t" + getCargo() + "  Sueldo: $" + getSueldoBase() + "\n";
-        temp += "\t Fecha de Ingreso:" + getFechaIngreso() + "\n";
+        temp += "\tFecha de Ingreso:" + getFechaIngreso() + "\n";
         temp += "\tNumero de Cuenta: " + getNumCuenta();
         return temp;
     }

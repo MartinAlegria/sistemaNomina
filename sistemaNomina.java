@@ -1,4 +1,5 @@
 
+
 import java.util.*;
 import javax.swing.*;
 import java.io.*;
@@ -41,9 +42,12 @@ public class sistemaNomina {
             emp[i] = new Empleados();
         }
 
+        initFiles();
         buscaEmpleado(); //METODO QUE BUSCA EMPLADOS POR SU NUMERO DE
         datos = emp[indexEmpleado].imprimirDatos();
+        System.out.println("\t----------------------------");
         System.out.println("\t" + datos);
+        System.out.println("\t----------------------------\n");
         inputUsuario();
 
         do {
@@ -56,9 +60,11 @@ public class sistemaNomina {
                     break;
 
                 case 2: //DAR DE BAJA A UN EMPLEADO
+                    baja();
                     break;
 
                 case 3: //MODIFICAR DATOS DE UN EMPLEADO
+                    mod();
                     break;
 
                 case 4: //SEGUIR ADELANTE
@@ -80,7 +86,8 @@ public class sistemaNomina {
 
         do {
 
-            System.out.println("\t*INGRESA EL # NOMINA* [Ej. 001 al 010] ");
+            System.out.println("\t BIENVENIDO AL SISTEMA");
+            System.out.println("\t*INGRESA EL # NOMINA* [Ej. 101 al 110] ");
             numeroDeNomina = lectura.nextInt();
 
             for (int i = 0; i <5; i++) {
@@ -185,19 +192,30 @@ public class sistemaNomina {
         else{ //SI HAY LUGAR
 
             //VARIABLES PARA ACTUALIZAR DATOS DEL ESPACIO LIBRE
+            int numC = 0;
 
             System.out.println("\tINGRESA EL NOMBRE");
-            String nom = lectura.nextLine();
+            String nom = lectura.next();
             System.out.println("\tINGRESA EL APELLIDO");
-            String ape = lectura.nextLine();
+            String ape = lectura.next();
             System.out.println("\tINGRESA EL CARGO");
-            String cargo = lectura.nextLine();
+            String cargo = lectura.next();
             System.out.println("\tINGRESA EL SUELDO");
             long sueldo = lectura.nextLong();
             System.out.println("\tINGRESA LA FECHA DE INGRESO (XX/XX/XX)");
-            String fecha = lectura.nextLine();
-            System.out.println("\tINGRESA EL NUMERO DE CUENTA (TRES DIGITOS EMPEZANDO CON 1 ej. 107)");
-            int numC = lectura.nextInt();
+            String fecha = lectura.next();
+
+            if(emptySpaceIndex == 9){
+
+                System.out.println("\tEL NUMERO DE CUENTA DEL USUARIO ES: 110");
+                numC = 110;
+
+            }else{
+
+                System.out.println("\tEL NUMERO DE CUENTA DEL USUARIO ES: 10" + (emptySpaceIndex +1));
+                numC = 100 + (emptySpaceIndex+1);
+
+            }
 
             emp[emptySpaceIndex].actualizaDatos(nom,ape,cargo,sueldo,fecha,numC);
 
@@ -205,9 +223,160 @@ public class sistemaNomina {
 
     }
 
-    public static void baja(){}
+    public static void baja(){
 
-    public static void mod(){}
+        String lista = "";
+        boolean correcto = true;
+        int numDeCuenta = 0;
+        int indexDelete = -1;
+
+        for (int i = 0; i<10; i++){ // CREA UNA LISTA CON TODOS LOS NOMBRES Y NUMEROS DE CUENTA DE LOS EMPLEADOS
+            lista += "\t" + (i+1) + ".- " + emp[i].getNombre() + " \t\tNum de Cuenta:" + emp[i].getNumCuenta() + "\n";
+        }
+
+        System.out.println("\tA QUE EMPLEADO QUIERES DAR DE BAJA ? (INGRESA SU NÚMERO DE CUENTA):");
+        System.out.println(lista);
+
+        do {
+
+            numDeCuenta = lectura.nextInt();
+
+            for(int i = 0; i<10; i++){ //ENCUENTRA EL NUMERO DE CUENTA QUE COINCIDE CON EL EMPLEADO
+
+                int temp = emp[i].getNumCuenta();
+
+                if (temp == numDeCuenta){
+                    indexDelete = i;
+                    correcto = true;
+                    break;
+                }//if
+                else{
+                    correcto = false;
+                }
+
+            }//for
+
+            if(!correcto){
+                System.out.print("\tEL NUMERO DE CUENTA NO COINCIDE CON NINGUNO DE LOS EMPLEADOS, INTETNA DE NUEVO \n");
+            }
+
+        }while(!correcto);
+
+        if (correcto) {
+            System.out.println("\t" + emp[indexDelete].getNombre() + " ha sido dado de BAJA");
+            emp[indexDelete] = new Empleados(); //CAMBIA LOS DATOS DEL EMPLEADO EN indexDelete A LOS DATOS DEFAULT "ELIMINANDOLO"
+        }
+
+    }
+
+    public static void mod(){
+
+        String lista = "";
+        boolean correcto = true;
+        int numDeCuenta = 0;
+        int indexMod = -1;
+
+        for (int i = 0; i<10; i++){ // CREA UNA LISTA CON TODOS LOS NOMBRES Y NUMEROS DE CUENTA DE LOS EMPLEADOS
+            lista += "\t" + (i+1) + ".- " + emp[i].getNombre() + " \t\tNum de Cuenta:" + emp[i].getNumCuenta() + "\n";
+        }
+
+        System.out.println("\tA QUE EMPLEADO LE QUIERES MODIFICAR LOS DATOS ? (INGRESA SU NÚMERO DE CUENTA):");
+        System.out.println(lista);
+
+        do {
+
+            numDeCuenta = lectura.nextInt();
+
+            for(int i = 0; i<10; i++){ //ENCUENTRA EL NUMERO DE CUENTA QUE COINCIDE CON EL EMPLEADO
+
+                int temp = emp[i].getNumCuenta();
+
+                if (temp == numDeCuenta){
+                    indexMod = i;
+                    correcto = true;
+                    break;
+                }//if
+                else{
+                    correcto = false;
+                }
+
+            }//for
+
+            if(!correcto){
+                System.out.print("\tEL NUMERO DE CUENTA NO COINCIDE CON NINGUNO DE LOS EMPLEADOS, INTETNA DE NUEVO \n");
+            }
+
+        }while(!correcto);
+
+        if (correcto){
+
+            int numC;
+
+            System.out.println("\tINGRESA EL NOMBRE");
+            String nom = lectura.next();
+            System.out.println("\tINGRESA EL APELLIDO");
+            String ape = lectura.next();
+            System.out.println("\tINGRESA EL CARGO");
+            String cargo = lectura.next();
+            System.out.println("\tINGRESA EL SUELDO");
+            long sueldo = lectura.nextLong();
+            System.out.println("\tINGRESA LA FECHA DE INGRESO (XX/XX/XX)");
+            String fecha = lectura.next();
+
+            if(indexMod == 9){
+
+                System.out.println("\tEL NUMERO DE CUENTA DEL USUARIO ES: 110");
+                numC = 110;
+
+            }else{
+
+                System.out.println("\tEL NUMERO DE CUENTA DEL USUARIO ES: 10" + (indexMod +1));
+                numC = 100 + (indexMod+1);
+
+            }
+
+            emp[indexMod].actualizaDatos(nom,ape,cargo,sueldo,fecha,numC);
+
+        }
+
+    }
+
+    public static void initFiles(){ //CREA LOS FILES DE INICIALIZACION PARA CADA EMPLEADO
+
+        try {
+            for (int i = 0; i < 10; i++) {
+
+                f = new File("init" + (i + 1) + ".txt");
+                bw = new BufferedWriter(new FileWriter("init " + (i + 1) + ".txt"));
+
+                String nombre = emp[i].getNombre();
+                String apellido = emp[i].getApellido();
+                String cargo = emp[i].getCargo();
+                long sueldo = emp[i].getSueldoBase();
+                String suel = String.valueOf(sueldo);
+                String fecha = emp[i].getFechaIngreso();
+                int numCuenta = emp[i].getNumCuenta();
+
+                bw.write(nombre); //PRIMERA LINEA DEL ARCHIVO ES EL NOMBRE
+                bw.newLine();
+                bw.write(apellido); //SEGUNDA LINEA -> APELLIDO
+                bw.newLine();
+                bw.write(cargo);
+                bw.newLine();
+                bw.write(suel);
+                bw.newLine();
+                bw.write(fecha);
+                bw.newLine();
+                bw.write(numCuenta);
+                bw.flush();
+                bw.close();
+
+            }//for
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 
 }//class
 
