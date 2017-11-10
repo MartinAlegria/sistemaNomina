@@ -10,9 +10,8 @@ public class sistemaNomina {
     static Empleados[] emp = new Empleados[10];
     static BufferedWriter bw;
     static BufferedReader br;
-    static File f;
+    static File f = new File("init.txt");
     static Scanner lectura = new Scanner(System.in);
-
 
     //Variables
     static int numeroDeNomina;
@@ -42,7 +41,13 @@ public class sistemaNomina {
             emp[i] = new Empleados();
         }
 
-        initFiles();
+        
+        if(f.exists()){
+            readInit();
+        }else{
+            initFiles();
+        }
+        
         buscaEmpleado(); //METODO QUE BUSCA EMPLADOS POR SU NUMERO DE
         datos = emp[indexEmpleado].imprimirDatos();
         System.out.println("\t----------------------------");
@@ -343,40 +348,111 @@ public class sistemaNomina {
 
     public static void initFiles(){ //CREA LOS FILES DE INICIALIZACION PARA CADA EMPLEADO
 
+        String nombres = "";
+        String apellidos = "";
+        String cargos = "";
+        String sueldos = "";
+        String fechas = "";
+        String numeros = "";
+        
         try {
+            
+            f = new File("init.txt");
+            bw = new BufferedWriter(new FileWriter("init.txt")); //CREAMOS EL ARCHIVO DE INICIALIZACIÓN
+            
             for (int i = 0; i < 10; i++) {
 
-                f = new File("init" + (i + 1) + ".txt");
-                bw = new BufferedWriter(new FileWriter("init " + (i + 1) + ".txt"));
-
-                String nombre = emp[i].getNombre();
-                String apellido = emp[i].getApellido();
-                String cargo = emp[i].getCargo();
-                long sueldo = emp[i].getSueldoBase();
-                String suel = String.valueOf(sueldo);
-                String fecha = emp[i].getFechaIngreso();
-                int numCuenta = emp[i].getNumCuenta();
-
-                bw.write(nombre); //PRIMERA LINEA DEL ARCHIVO ES EL NOMBRE
-                bw.newLine();
-                bw.write(apellido); //SEGUNDA LINEA -> APELLIDO
-                bw.newLine();
-                bw.write(cargo);
-                bw.newLine();
-                bw.write(suel);
-                bw.newLine();
-                bw.write(fecha);
-                bw.newLine();
-                bw.write(numCuenta);
-                bw.flush();
-                bw.close();
+                nombres += "" + emp[i].getNombre() + ",";
+                apellidos += "" + emp[i].getApellido() + ",";
+                cargos += "" + emp[i].getCargo() + ",";
+                sueldos += "" + emp[i].getSueldoBase() + ",";
+                fechas += "" + emp[i].getFechaIngreso() + ",";
+                numeros += "" + emp[i].getNumCuenta() + ",";
 
             }//for
+            
+            //CREAMOS UN ARCHIVO DONDE CADA LINEA ES INFORMACIÓN SOBRE LOS EMPLEADOS
+            bw.write(nombres); //PRIMERA LINEA -> NOMBRE
+            bw.newLine();
+            bw.write(apellidos); //SEGUNDA LINA -> APELLIDO
+            bw.newLine();
+            bw.write(cargos); //TERCERA LIENA -> CARGOS
+            bw.newLine();
+            bw.write(sueldos); //CUARTA LINEA -> SUELDOS
+            bw.newLine();
+            bw.write(fechas); //QUINTA LINEA -> FECHAS DE INGRESO
+            bw.newLine();
+            bw.write(numeros); //SEXTA LINEA -> NUMEROS DE CUENTA
+            
+            bw.flush();
+            bw.close();
+            
 
         } catch (IOException e){
             e.printStackTrace();
         }
     }
+    
+    public static void readInit(){
+        
+        String[] nombresInit = new String[10];
+        String[] apellidosInit = new String[10];
+        String[] cargosInit = new String[10];
+        String[] s = new String[10];
+        long[] sueldosInit = new long[10];
+        String[] fechasInit = new String[10];
+        String[] n = new String[10];
+        int[] numerosInit = new int[10];
+        
+        try {
+    
+        
+        br = new BufferedReader(new FileReader(f));
+            
+        String nombres = br.readLine();
+        String apellidos = br.readLine();
+        String cargos = br.readLine();
+        String sueldos = br.readLine();
+        String fechas = br.readLine();
+        String numeros = br.readLine();
+        
+        nombresInit = nombres.split(",");
+        apellidosInit = apellidos.split(",");
+        cargosInit = cargos.split(",");
+        s = sueldos.split(",");
+        fechasInit = fechas.split(",");
+        n = numeros.split(",");
+        
+        for(int i = 0; i<10; i++){ //QUITEN ESTO CUANDO VEAN QUE FUNCIONA BIEN
+            
+            System.out.println(nombresInit[i]);
+            System.out.println(apellidosInit[i]);
+            System.out.println(cargosInit[i]);
+            System.out.println(sueldosInit[i]);
+            System.out.println(fechasInit[i]);
+            System.out.println(numerosInit[i] + "\n");
+            
+        }//for
+            
+            for(int i = 0; i<10; i++){ //FOR PARA PONER LOS NUMEROS DE CUENTAS Y SALDOS EN UN ARREGLO DE NUMEROS Y NO STRINGS
+                
+                sueldosInit[i] = Long.parseLong(s[i]);
+                numerosInit[i] = Integer.parseInt(n[i]);
+                
+            }
+            
+            for(int i = 0; i<10; i++){ //FOR PARA ACTUALIZAR LOS DATOS DE LOS EMPLEADOS A PARTIR DEL ARCHIVO
+                
+                emp[i].actualizaDatos(nombresInit[i], apellidosInit[i], cargosInit[i], sueldosInit[i], fechasInit[i], numerosInit[i]);
+                
+            }
+    
+        }catch(IOException e){
+        
+            e.printStackTrace();
+        }
+    
+    }//readInit
 
 }//class
 
