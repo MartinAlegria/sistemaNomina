@@ -10,14 +10,28 @@ public class sistemaNomina {
     static Empleados[] emp = new Empleados[10];
     static BufferedWriter bw;
     static BufferedReader br;
-    static File f = new File("init.txt");
+    static File f = new File("init.csv");
     static Scanner lectura = new Scanner(System.in);
+    static int[] diasTrabajados = new int[10];
+    static int[][] asignaciones = new int[4][10];
+    /*
+    * index 0 -> BONOS
+    * index 1 -> FERIADOS
+    * index 2 -> HORAS EXTRAS
+    * index 3 -> OTROS
+    * */
+    static int[][] deducciones = new int[4][10];
+    /*
+    * index 0 -> IVA
+    * index 1 -> ISR
+    * index 2 -> PRESTAMOS
+    * index 3 -> OTROS
+    * */
+    static boolean[] extrasAgregados = new boolean[10];
+
 
     //Variables
     static int numeroDeNomina;
-    static int diasTrabajados;
-    static int asignaciones;
-    static int deducciones;
     static int opcionMenu;
     static int indexEmpleado;
     static String datos;
@@ -40,15 +54,21 @@ public class sistemaNomina {
         for(int i = 5; i<10; i++){
             emp[i] = new Empleados();
         }
+        //RELLENA LOS EXTRAS AGREGADOS COMO FALSE -- NOS VA A AYUDAR PARA DECIRLE AL USUARIO A CUALES EMPLEADOS NO LES HA AGREGADO SUS DEDUCIONES, DIAS TRABAJADOS, ASIGNACIONES, ETC.
+        for(int i = 0; i<10; i++){
+            extrasAgregados[i] = false;
+        }
 
         
-        if(f.exists()){
+        if(f.exists()){ // SI EL ARCHIVO INIT YA EXISTE SOLO LO LEE
             readInit();
         }else{
-            initFiles();
+            initFiles(); //SI NO EXISTE CREA UNO Y LO LLENA
         }
-        
-        buscaEmpleado(); //METODO QUE BUSCA EMPLADOS POR SU NUMERO DE
+
+        System.out.println("\t BIENVENIDO AL SISTEMA");
+
+        buscaEmpleado(); //METODO QUE BUSCA EMPLADOS POR SU NUMERO DE CUENTA
         datos = emp[indexEmpleado].imprimirDatos();
         System.out.println("\t----------------------------");
         System.out.println("\t" + datos);
@@ -62,17 +82,32 @@ public class sistemaNomina {
 
                 case 1: // DAR DE ALTA A UN EMPLEADO
                     alta();
+                    initFiles();
                     break;
 
                 case 2: //DAR DE BAJA A UN EMPLEADO
                     baja();
+                    initFiles();
                     break;
 
                 case 3: //MODIFICAR DATOS DE UN EMPLEADO
                     mod();
+                    inputUsuario();
+                    initFiles();
                     break;
 
-                case 4: //SEGUIR ADELANTE
+                case 4: //OTRO USUARIO
+                    buscaEmpleado(); //METODO QUE BUSCA EMPLADOS POR SU NUMERO DE CUENTA
+                    datos = emp[indexEmpleado].imprimirDatos();
+                    System.out.println("\t----------------------------");
+                    System.out.println("\t" + datos);
+                    System.out.println("\t----------------------------\n");
+                    inputUsuario();;
+                    initFiles();
+                    break;
+
+                case 5: //SEGUIR ADELANTE
+                    seguirAdelante();
                     break;
 
                 default: //NINGUNO DE ESOS
@@ -81,7 +116,7 @@ public class sistemaNomina {
 
             }//switch
 
-        }while (opcionMenu != 4); //LOOP MIENTRAS EL USUARIO NO QUIERA SEGUIR ADELANTE
+        }while (opcionMenu != 5); //LOOP MIENTRAS EL USUARIO NO QUIERA SEGUIR ADELANTE
 
 
 
@@ -91,11 +126,10 @@ public class sistemaNomina {
 
         do {
 
-            System.out.println("\t BIENVENIDO AL SISTEMA");
             System.out.println("\t*INGRESA EL # NOMINA* [Ej. 101 al 110] ");
             numeroDeNomina = lectura.nextInt();
 
-            for (int i = 0; i <5; i++) {
+            for (int i = 0; i <10; i++) {
 
                 int temp = emp[i].getNumCuenta();
 
@@ -117,60 +151,63 @@ public class sistemaNomina {
 
         }while(!encontrado); //WHILE PARA BUSCAR EL NUMERO DE NOMINA, NO SALE HASTA QUE SE HAYA ENCONTRADO UNO QUE COINCIDA CON ALGUNO DEL SISTEMA
 
-    }
+    }//busca empleado
 
 
     public static void inputUsuario(){
 
         System.out.println("\tIngrese los dias trabajados de " + emp[indexEmpleado].getNombre());
-        diasTrabajados = lectura.nextInt();
+        diasTrabajados[indexEmpleado] = lectura.nextInt();
 
         System.out.println("\tIngrese sus asignaciones"); //SE INGRESAN ASIGNACIONES Y SE GUARDAN EN UNA VARIABLE
         System.out.println("\t\tBonos:");
-        asignaciones = lectura.nextInt();
+            asignaciones[0][indexEmpleado] = lectura.nextInt();
         System.out.println("\t\tFeriados");
-        asignaciones += lectura.nextInt();
+            asignaciones[1][indexEmpleado] += lectura.nextInt();
         System.out.println("\t\tHoras Extras");
-        asignaciones += lectura.nextInt();
+            asignaciones[2][indexEmpleado] += lectura.nextInt();
         System.out.println("\t\tOtros");
-        asignaciones += lectura.nextInt();
+            asignaciones[3][indexEmpleado] += lectura.nextInt();
 
         System.out.println("\tIngrese sus deducciones (IVA, ISR, Prestamos)"); //SE INGRESAN DEDUCCIONES Y SE GUARDAN EN UNA VARIABLE
         System.out.println("\t\tIVA:");
-        deducciones = lectura.nextInt();
+            deducciones[0][indexEmpleado] = lectura.nextInt();
         System.out.println("\t\tISR");
-        deducciones += lectura.nextInt();
+            deducciones[1][indexEmpleado] += lectura.nextInt();
         System.out.println("\t\tPrestamos");
-        deducciones += lectura.nextInt();
+            deducciones[2][indexEmpleado] += lectura.nextInt();
         System.out.println("\t\tOtros");
-        deducciones += lectura.nextInt();
+            deducciones[3][indexEmpleado] += lectura.nextInt();
 
-    }
+        //PONE FALSE EN EL ARRAY DE EXTRAS AGREGADOS
+        extrasAgregados[indexEmpleado] = true;
+
+    }//input usuario
 
     public static void menu() {
 
 
             //MENU PARA DAR DE ALTA, BAJA O MODIFIAR DATOS DE UN EMPLEADO
             System.out.println("\n\tQUE OPCION DESEA SELECCIONAR (SELECCIONE EL NUMERO DE LA OPCION)");
-            System.out.println("\t ---------    ---------    --------------------    --------------------");
-            System.out.println("\t| 1. ALTA |  | 2. BAJA |  | 3. MODIFICAR DATOS |  | 4. SEGUIR ADELANTE |");
-            System.out.println("\t ---------    ---------    --------------------    --------------------");
+            System.out.println("\t ---------    ---------    --------------------    -------------------------    --------------------");
+            System.out.println("\t| 1. ALTA |  | 2. BAJA |  | 3. MODIFICAR DATOS |  | 4. BUSCAR OTRO EMPLEADO |  | 5. SEGUIR ADELANTE |");
+            System.out.println("\t ---------    ---------    --------------------    -------------------------    --------------------");
 
         do {
 
             opcionMenu = lectura.nextInt();
 
-            if(opcionMenu >=1 || opcionMenu <=4){ //SE SELECCIONA UNA OPCION DENTRO DEL ARANGO DE OPCIONES
+                if(opcionMenu >=1 || opcionMenu <=4){ //SE SELECCIONA UNA OPCION DENTRO DEL ARANGO DE OPCIONES
                 valido = true;
-            }
-            if(opcionMenu<0 || opcionMenu >4){ //SE SELECCIONA OTRA OPCION QUE NO ESTA DENTRO DEL RANGO DE OPCIONES
+                }
+                if(opcionMenu<0 || opcionMenu >5){ //SE SELECCIONA OTRA OPCION QUE NO ESTA DENTRO DEL RANGO DE OPCIONES
                 System.out.println("\tLA OPCION NO ES VALIDA, INTENTA DE NUEVO");
                 valido = false;
-            }
+                }
 
-        } while (!valido);
+        } while (!valido);//do while
 
-    }
+    }//menu
 
     public static void alta(){
 
@@ -226,7 +263,7 @@ public class sistemaNomina {
 
         }
 
-    }
+    }//alta
 
     public static void baja(){
 
@@ -272,7 +309,7 @@ public class sistemaNomina {
             emp[indexDelete] = new Empleados(); //CAMBIA LOS DATOS DEL EMPLEADO EN indexDelete A LOS DATOS DEFAULT "ELIMINANDOLO"
         }
 
-    }
+    }// baja
 
     public static void mod(){
 
@@ -344,7 +381,7 @@ public class sistemaNomina {
 
         }
 
-    }
+    }//mod
 
     public static void initFiles(){ //CREA LOS FILES DE INICIALIZACION PARA CADA EMPLEADO
 
@@ -357,8 +394,8 @@ public class sistemaNomina {
         
         try {
             
-            f = new File("init.txt");
-            bw = new BufferedWriter(new FileWriter("init.txt")); //CREAMOS EL ARCHIVO DE INICIALIZACIÓN
+            f = new File("init.csv");
+            bw = new BufferedWriter(new FileWriter("init.csv")); //CREAMOS EL ARCHIVO DE INICIALIZACIÓN
             
             for (int i = 0; i < 10; i++) {
 
@@ -391,7 +428,7 @@ public class sistemaNomina {
         } catch (IOException e){
             e.printStackTrace();
         }
-    }
+    }//init files
     
     public static void readInit(){
         
@@ -443,7 +480,7 @@ public class sistemaNomina {
             
             for(int i = 0; i<10; i++){ //FOR PARA ACTUALIZAR LOS DATOS DE LOS EMPLEADOS A PARTIR DEL ARCHIVO
                 
-                emp[i].actualizaDatos(nombresInit[i], apellidosInit[i], cargosInit[i], sueldosInit[i], fechasInit[i], numerosInit[i]);
+                emp[i].actualizaDatos(nombresInit[i], apellidosInit[i], cargosInit[i], sueldosInit[i], fechasInit[i], numerosInit[i]);
                 
             }
     
@@ -453,6 +490,38 @@ public class sistemaNomina {
         }
     
     }//readInit
+
+    public static void seguirAdelante(){
+
+        boolean alguno = false; //Pa saber si hay alguno que falta de deducciones, asignaciones, dias trabajados
+        String empleados = "";
+
+        for(int i = 0; i<10; i++){
+
+            if(!extrasAgregados[i]){
+                alguno = true;
+
+                String temp = emp[i].getNombre();
+                if(!temp.equalsIgnoreCase("x")){
+                empleados += "\t -> " + emp[i].getNombre() + " " + emp[i].getApellido() + "\n";
+                }
+            }
+
+        }//for
+
+        if(alguno){
+            System.out.println("\tTODAVIA NO INGRESAS ASIGNACIONES, DEDUCCIONES, DIAS TRABJADOS DE LOS SIGUIENTES EMPLEADOS: ");
+            System.out.println(empleados);
+        }//if
+
+        System.out.println("\tESTAS SEGURO QUE QUIERES SEGUIR ADELANTE ? [Y/N]");
+        String dec = lectura.next();
+        if(dec.equalsIgnoreCase("n")){
+            opcionMenu = 0;
+        }
+
+
+    }
 
 }//class
 
