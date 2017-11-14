@@ -28,6 +28,7 @@ public class sistemaNomina {
     * index 3 -> OTROS
     * */
     static boolean[] extrasAgregados = new boolean[10];
+    static int[] sueldoNeto = new int[10];
 
 
     //Variables
@@ -117,6 +118,8 @@ public class sistemaNomina {
             }//switch
 
         }while (opcionMenu != 5); //LOOP MIENTRAS EL USUARIO NO QUIERA SEGUIR ADELANTE
+
+        reciboPago();
 
 
 
@@ -273,7 +276,7 @@ public class sistemaNomina {
         int indexDelete = -1;
 
         for (int i = 0; i<10; i++){ // CREA UNA LISTA CON TODOS LOS NOMBRES Y NUMEROS DE CUENTA DE LOS EMPLEADOS
-            lista += "\t" + (i+1) + ".- " + emp[i].getNombre() + " \t\tNum de Cuenta:" + emp[i].getNumCuenta() + "\n";
+            lista += "\t" + (i+1) + ".- " + emp[i].getNombre() + " \t\tNum de Cuenta: \t" + emp[i].getNumCuenta() + "\n";
         }
 
         System.out.println("\tA QUE EMPLEADO QUIERES DAR DE BAJA ? (INGRESA SU NÚMERO DE CUENTA):");
@@ -319,7 +322,7 @@ public class sistemaNomina {
         int indexMod = -1;
 
         for (int i = 0; i<10; i++){ // CREA UNA LISTA CON TODOS LOS NOMBRES Y NUMEROS DE CUENTA DE LOS EMPLEADOS
-            lista += "\t" + (i+1) + ".- " + emp[i].getNombre() + " \t\tNum de Cuenta:" + emp[i].getNumCuenta() + "\n";
+            lista += "\t" + (i+1) + ".- " + emp[i].getNombre() + " \t\tNum de Cuenta: \t" + emp[i].getNumCuenta() + "\n";
         }
 
         System.out.println("\tA QUE EMPLEADO LE QUIERES MODIFICAR LOS DATOS ? (INGRESA SU NÚMERO DE CUENTA):");
@@ -380,6 +383,8 @@ public class sistemaNomina {
             emp[indexMod].actualizaDatos(nom,ape,cargo,sueldo,fecha,numC);
 
         }
+
+        indexEmpleado = indexMod;
 
     }//mod
 
@@ -522,6 +527,67 @@ public class sistemaNomina {
 
 
     }
+
+    public static void reciboPago(){
+
+
+        for(int i = 0; i<10; i++){
+
+            String temp = emp[i].getNombre();
+
+            if(!temp.equalsIgnoreCase("X")) {
+
+                int asignacionesTotales = 0;
+                int deduccionesTotales = 0;
+                long sueldotl = emp[i].getSueldoBase();
+
+                System.out.println("\t * RECIBO DE PAGO *");
+                System.out.println("\t----------------------------\n");
+                System.out.println("\t" + emp[i].getNombre() + " " + emp[i].getApellido());
+                System.out.println("\t SUELDO BRUTO: $" + emp[i].getSueldoBase());
+
+                //ASIGNACIONES
+
+                System.out.println("\t ASIGNACIONES: ");
+                System.out.println("\t - BONOS: $" + asignaciones[0][i]);
+                System.out.println("\t - FERIADOS: $" + asignaciones[1][i]);
+                System.out.println("\t - HORAS EXTRAS: $" + asignaciones[2][i]);
+                System.out.println("\t - OTROS: $" + asignaciones[3][i]);
+
+                for (int j = 0; j< 4; j++) {
+                    asignacionesTotales += asignaciones[j][i];
+                }
+
+                System.out.println("\t ASIGNACIONES TOTALES: $" + asignacionesTotales);
+                System.out.println("\t----------------------------\n");
+
+                //DEDUCCIONES
+
+                System.out.println("\t DEDUCCIONES: ");
+                System.out.println("\t - IVA: $" + deducciones[0][i]);
+                System.out.println("\t - ISR: $" + deducciones[1][i]);
+                System.out.println("\t - PRESTAMOS: $" + deducciones[2][i]);
+                System.out.println("\t - OTROS: $" + deducciones[3][i]);
+
+                for (int j = 0; j < 4; j++) {
+                    deduccionesTotales += deducciones[j][i];
+                }
+
+                System.out.println("\t DEDUCCIONES TOTALES: $" + deduccionesTotales);
+                System.out.println("\t----------------------------\n");
+
+                sueldoNeto[i] += (int) sueldotl + asignacionesTotales - deduccionesTotales;
+
+                System.out.println("\t El Sueldo Neto de " + emp[i].getNombre() + " es $" + sueldoNeto[i]);
+
+                System.out.println("\t----------------------------\n");
+
+            }//IF
+
+
+        }//for
+
+    }//recibo de pago
 
 }//class
 
