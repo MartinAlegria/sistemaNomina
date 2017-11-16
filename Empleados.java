@@ -88,7 +88,7 @@ public class Empleados {
         setCuenta(numCuenta);
     }
 
-    //METODO PARA IMPRIMIR DATOS
+    //METODO PARA IMPRIMIR DATOS DE EMPLEADOS
 
     public String imprimirDatos(){
         String temp = "";

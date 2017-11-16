@@ -165,6 +165,8 @@ public class sistemaNomina {
 
     public static void inputUsuario(){
 
+        double ivatl = 0.0;
+
         System.out.println("\tIngrese los dias trabajados de " + emp[indexEmpleado].getNombre());
         diasTrabajados[indexEmpleado] = lectura.nextInt();
 
@@ -180,7 +182,8 @@ public class sistemaNomina {
 
         System.out.println("\tIngrese sus deducciones (IVA, ISR, Prestamos)"); //SE INGRESAN DEDUCCIONES Y SE GUARDAN EN UNA VARIABLE
         System.out.println("\t\tIVA:");
-            deducciones[0][indexEmpleado] = lectura.nextInt();
+            ivatl = lectura.nextInt() * 0.16;
+            deducciones[0][indexEmpleado] = (int) ivatl;
         System.out.println("\t\tISR");
             deducciones[1][indexEmpleado] += lectura.nextInt();
         System.out.println("\t\tPrestamos");
