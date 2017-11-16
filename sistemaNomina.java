@@ -120,6 +120,7 @@ public class sistemaNomina {
         }while (opcionMenu != 5); //LOOP MIENTRAS EL USUARIO NO QUIERA SEGUIR ADELANTE
 
         reciboPago();
+        FichaInfo();
 
 
 
@@ -465,16 +466,6 @@ public class sistemaNomina {
         fechasInit = fechas.split(",");
         n = numeros.split(",");
         
-        for(int i = 0; i<10; i++){ //QUITEN ESTO CUANDO VEAN QUE FUNCIONA BIEN
-            
-            System.out.println(nombresInit[i]);
-            System.out.println(apellidosInit[i]);
-            System.out.println(cargosInit[i]);
-            System.out.println(sueldosInit[i]);
-            System.out.println(fechasInit[i]);
-            System.out.println(numerosInit[i] + "\n");
-            
-        }//for
             
             for(int i = 0; i<10; i++){ //FOR PARA PONER LOS NUMEROS DE CUENTAS Y SALDOS EN UN ARREGLO DE NUMEROS Y NO STRINGS
                 
@@ -588,6 +579,19 @@ public class sistemaNomina {
         }//for
 
     }//recibo de pago
+    public static void FichaInfo(){
+        for(int i=0; i<10; i++){
+            String temp = emp[i].getNombre();
+            if(!temp.equalsIgnoreCase("X")) {
+            System.out.println(emp[i].imprimirDatos());
+            System.out.println("\t"+emp[i].getNombre() + " es $" + sueldoNeto[i]+"\n");
+        }
+        else{
+
+        }
+
+
+        }
+    }
 
 }//class
-

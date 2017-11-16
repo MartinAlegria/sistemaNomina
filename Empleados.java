@@ -1,4 +1,3 @@
-
 public class Empleados {
 
     //Variables de Instancia
