@@ -69,13 +69,6 @@ public class sistemaNomina {
 
         System.out.println("\t BIENVENIDO AL SISTEMA");
 
-        buscaEmpleado(); //METODO QUE BUSCA EMPLADOS POR SU NUMERO DE CUENTA
-        datos = emp[indexEmpleado].imprimirDatos();
-        System.out.println("\t----------------------------");
-        System.out.println("\t" + datos);
-        System.out.println("\t----------------------------\n");
-        inputUsuario();
-
         do {
             menu();
 
@@ -120,7 +113,7 @@ public class sistemaNomina {
         }while (opcionMenu != 5); //LOOP MIENTRAS EL USUARIO NO QUIERA SEGUIR ADELANTE
 
         reciboPago();
-        FichaInfo();
+        fichaInfo();
 
 
 
@@ -128,9 +121,21 @@ public class sistemaNomina {
 
     public static void buscaEmpleado(){
 
+        String lista = "";
+
         do {
 
             System.out.println("\t*INGRESA EL # NOMINA* [Ej. 101 al 110] ");
+
+            for (int i = 0; i<10; i++){ // CREA UNA LISTA CON TODOS LOS NOMBRES Y NUMEROS DE CUENTA DE LOS EMPLEADOS
+            String temp = emp[i].getNombre();
+            if(!temp.equalsIgnoreCase("x")){
+                lista += "\t" + (i+1) + ".- " + emp[i].getNombre() + " \t\tNum de Cuenta: \t" + emp[i].getNumCuenta() + "\n";
+            }//if
+        }
+
+            System.out.println(lista);
+
             numeroDeNomina = lectura.nextInt();
 
             for (int i = 0; i <10; i++) {
@@ -193,9 +198,9 @@ public class sistemaNomina {
 
             //MENU PARA DAR DE ALTA, BAJA O MODIFIAR DATOS DE UN EMPLEADO
             System.out.println("\n\tQUE OPCION DESEA SELECCIONAR (SELECCIONE EL NUMERO DE LA OPCION)");
-            System.out.println("\t ---------    ---------    --------------------    -------------------------    --------------------");
-            System.out.println("\t| 1. ALTA |  | 2. BAJA |  | 3. MODIFICAR DATOS |  | 4. BUSCAR OTRO EMPLEADO |  | 5. SEGUIR ADELANTE |");
-            System.out.println("\t ---------    ---------    --------------------    -------------------------    --------------------");
+            System.out.println("\t ---------    ---------    --------------------    ----------------------    --------------------");
+            System.out.println("\t| 1. ALTA |  | 2. BAJA |  | 3. MODIFICAR DATOS |  | 4. CONSULTA EMPLEADO |  | 5. SEGUIR ADELANTE |");
+            System.out.println("\t ---------    ---------    --------------------    ----------------------    --------------------");
 
         do {
 
@@ -277,7 +282,10 @@ public class sistemaNomina {
         int indexDelete = -1;
 
         for (int i = 0; i<10; i++){ // CREA UNA LISTA CON TODOS LOS NOMBRES Y NUMEROS DE CUENTA DE LOS EMPLEADOS
-            lista += "\t" + (i+1) + ".- " + emp[i].getNombre() + " \t\tNum de Cuenta: \t" + emp[i].getNumCuenta() + "\n";
+            String temp = emp[i].getNombre();
+            if(!temp.equalsIgnoreCase("x")){
+                lista += "\t" + (i+1) + ".- " + emp[i].getNombre() + " \t\tNum de Cuenta: \t" + emp[i].getNumCuenta() + "\n";
+            }//if
         }
 
         System.out.println("\tA QUE EMPLEADO QUIERES DAR DE BAJA ? (INGRESA SU NÚMERO DE CUENTA):");
@@ -323,7 +331,10 @@ public class sistemaNomina {
         int indexMod = -1;
 
         for (int i = 0; i<10; i++){ // CREA UNA LISTA CON TODOS LOS NOMBRES Y NUMEROS DE CUENTA DE LOS EMPLEADOS
-            lista += "\t" + (i+1) + ".- " + emp[i].getNombre() + " \t\tNum de Cuenta: \t" + emp[i].getNumCuenta() + "\n";
+            String temp = emp[i].getNombre();
+            if(!temp.equalsIgnoreCase("x")){
+                lista += "\t" + (i+1) + ".- " + emp[i].getNombre() + " \t\tNum de Cuenta: \t" + emp[i].getNumCuenta() + "\n";
+            }//if
         }
 
         System.out.println("\tA QUE EMPLEADO LE QUIERES MODIFICAR LOS DATOS ? (INGRESA SU NÚMERO DE CUENTA):");
@@ -579,19 +590,15 @@ public class sistemaNomina {
         }//for
 
     }//recibo de pago
-    public static void FichaInfo(){
+    public static void fichaInfo(){
         for(int i=0; i<10; i++){
             String temp = emp[i].getNombre();
             if(!temp.equalsIgnoreCase("X")) {
-            System.out.println(emp[i].imprimirDatos());
-            System.out.println("\t"+emp[i].getNombre() + " es $" + sueldoNeto[i]+"\n");
-        }
-        else{
+                System.out.println(emp[i].imprimirDatos());
+                System.out.println("\tEl sueldo de "+emp[i].getNombre() + " es $" + sueldoNeto[i]+"\n");
+             }//if
 
-        }
-
-
-        }
-    }
+        }//for
+    }//fichaInfo
 
 }//class
