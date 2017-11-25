@@ -45,13 +45,13 @@ public class sistemaNomina {
 
         //EMPLEADOS - SOLO 5 PARA PODER DARLE AL USUARIO ESPACIO DE ELIMINAR O AÑADIR MÁS
 
-        emp[0] = new Empleados("Martin", "Alegria", "CEO", 10000000, "11/02/2016", 101);
-        emp[1] = new Empleados("Diego", "Moreno", "Intendente", 1000, "11/02/2016", 102);
-        emp[2] = new Empleados("Luis", "García", "Programador", 50000, "11/02/2016", 103);
-        emp[3] = new Empleados("Chava", "Iglesias", "Presidente", 2000000, "11/02/2016", 104);
+        emp[0] = new Empleados("Martin", "Alegria", "CEO", 50000, "11/02/2016", 101);
+        emp[1] = new Empleados("Diego", "Moreno", "Intendente", 2000, "11/02/2016", 102);
+        emp[2] = new Empleados("Luis", "García", "Programador", 10000, "11/02/2016", 103);
+        emp[3] = new Empleados("Chava", "Iglesias", "Presidente", 50000, "11/02/2016", 104);
         emp[4] = new Empleados("Hugo", "Sanchez", "Asistente", 3000, "11/02/2016", 105);
 
-        //RELLENA LOS DEMAS ESPACIOS CON DATOS DEFAULT
+        //RELLENA LOS DEMAS ESPACIOS CON DATOS DEFAULT EN UN ARREGLO DE OBJETOS
         for(int i = 5; i<10; i++){
             emp[i] = new Empleados();
         }
@@ -114,6 +114,7 @@ public class sistemaNomina {
 
         reciboPago();
         fichaInfo();
+        listadoNomina();
 
 
 
@@ -121,15 +122,17 @@ public class sistemaNomina {
 
     public static void buscaEmpleado(){
 
-        String lista = "";
+        String lista = ""; //String en el cual se va a hacer la lista de nombres y numeros de cuenta
 
         do {
 
             System.out.println("\t*INGRESA EL # NOMINA* [Ej. 101 al 110] ");
 
             for (int i = 0; i<10; i++){ // CREA UNA LISTA CON TODOS LOS NOMBRES Y NUMEROS DE CUENTA DE LOS EMPLEADOS
-            String temp = emp[i].getNombre();
-            if(!temp.equalsIgnoreCase("x")){
+
+            String temp = emp[i].getNombre(); //Variable temporal para la comparación de abajo
+
+            if(!temp.equalsIgnoreCase("x")){ //Si el nombre del usuario es igual a una x, no se imprime, ya que el nombre default de los empleados sin inicializar es x
                 lista += "\t" + (i+1) + ".- " + emp[i].getNombre() + " \t\tNum de Cuenta: \t" + emp[i].getNumCuenta() + "\n";
             }//if
         }
@@ -166,6 +169,7 @@ public class sistemaNomina {
     public static void inputUsuario(){
 
         double ivatl = 0.0;
+        int temp = (int) emp[indexEmpleado].getSueldoBase(); //Variable temporal para el calculo del iva
 
         System.out.println("\tIngrese los dias trabajados de " + emp[indexEmpleado].getNombre());
         diasTrabajados[indexEmpleado] = lectura.nextInt();
@@ -181,8 +185,7 @@ public class sistemaNomina {
             asignaciones[3][indexEmpleado] += lectura.nextInt();
 
         System.out.println("\tIngrese sus deducciones (IVA, ISR, Prestamos)"); //SE INGRESAN DEDUCCIONES Y SE GUARDAN EN UNA VARIABLE
-        System.out.println("\t\tIVA:");
-            ivatl = lectura.nextInt() * 0.16;
+            ivatl =  temp * 0.16;
             deducciones[0][indexEmpleado] = (int) ivatl;
         System.out.println("\t\tISR");
             deducciones[1][indexEmpleado] += lectura.nextInt();
@@ -223,8 +226,8 @@ public class sistemaNomina {
 
     public static void alta(){
 
-        boolean emptySpace = false;
-        int emptySpaceIndex = -1;
+        boolean emptySpace = false; //Variable para ver si hay un espacio vacío
+        int emptySpaceIndex = -1; //Variable donde va a ir el index del espacio vacío
 
         for(int i = 0; i<emp.length; i++){
 
@@ -593,15 +596,41 @@ public class sistemaNomina {
         }//for
 
     }//recibo de pago
+
     public static void fichaInfo(){
+
         for(int i=0; i<10; i++){
             String temp = emp[i].getNombre();
+
             if(!temp.equalsIgnoreCase("X")) {
                 System.out.println(emp[i].imprimirDatos());
                 System.out.println("\tEl sueldo de "+emp[i].getNombre() + " es $" + sueldoNeto[i]+"\n");
              }//if
 
         }//for
+
     }//fichaInfo
+
+    public static void listadoNomina(){
+
+        int nominaEmpresa = 0;
+
+        for(int i = 0; i<10; i++){
+
+            String temp = emp[i].getNombre();
+
+            if(!temp.equalsIgnoreCase("X")){
+
+                System.out.println("\t" + temp + ":  $" + sueldoNeto[i] );
+                System.out.println("\t----------------------------\n");
+                nominaEmpresa += sueldoNeto[i];
+
+            }//if
+
+        }
+
+        System.out.println("\tListado total de nómina para la empresa: \n\t $" + nominaEmpresa);
+
+    }//listadoNomina
 
 }//class
