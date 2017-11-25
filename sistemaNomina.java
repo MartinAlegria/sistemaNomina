@@ -1,4 +1,13 @@
-
+/*
+* Martín Alegría
+* Diego Moreno
+* Luis García
+*
+* Programa de listado de nómina para una microempresa con máximo de 10 empleados.
+* En el programa puedes dar de alta y baja a un empleado, introducir sus asginaciones y deducciones, al igual que modificar sus datos.
+* Despues de hacer todos estos, el programa dará la ficha de información de cada usuario al igual que el listado de nómina de la empresa para ese mes.
+* 
+* */
 
 import java.util.*;
 import javax.swing.*;
@@ -103,7 +112,7 @@ public class sistemaNomina {
                 case 5: //SEGUIR ADELANTE
                     seguirAdelante();
                     break;
-
+                int nominaEmpresa = 0;
                 default: //NINGUNO DE ESOS
                     System.out.println("\tLa opcion no es valida, intentalo otra vez");
                     break;
@@ -194,7 +203,7 @@ public class sistemaNomina {
         System.out.println("\t\tOtros");
             deducciones[3][indexEmpleado] += lectura.nextInt();
 
-        //PONE FALSE EN EL ARRAY DE EXTRAS AGREGADOS
+        //PONE TRUE EN EL ARRAY DE EXTRAS AGREGADOS
         extrasAgregados[indexEmpleado] = true;
 
     }//input usuario
